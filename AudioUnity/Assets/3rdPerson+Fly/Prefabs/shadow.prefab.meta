@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 99aff40f3c93eea4eaf473f85c4c09c6
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 28647
+  packageName: 3rd Person Controller + Fly Mode
+  packageVersion: 2.1.6
+  assetPath: Assets/3rdPerson+Fly/Prefabs/shadow.prefab
+  uploadId: 621162

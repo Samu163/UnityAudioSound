@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 08ace8642380dd0489507f969b3d9dd5
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 28647
+  packageName: 3rd Person Controller + Fly Mode
+  packageVersion: 2.1.6
+  assetPath: Assets/3rdPerson+Fly/Materials/char_shadow_toon.cubemap
+  uploadId: 621162

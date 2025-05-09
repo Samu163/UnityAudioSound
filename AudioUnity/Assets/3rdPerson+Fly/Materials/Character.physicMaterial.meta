@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 7a665289b8701a143a4d81cc38730390
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 28647
+  packageName: 3rd Person Controller + Fly Mode
+  packageVersion: 2.1.6
+  assetPath: Assets/3rdPerson+Fly/Materials/Character.physicMaterial
+  uploadId: 621162
