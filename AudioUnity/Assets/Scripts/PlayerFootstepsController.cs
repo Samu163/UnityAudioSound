@@ -9,8 +9,21 @@ public class PlayerFootstepsController : MonoBehaviour
     [SerializeField] private List<AudioClip> footstepSoundsWood;
     [SerializeField] private AudioSource footstepSource;
 
+    [SerializeField] private AudioClip jumpSoundWood;
+    [SerializeField] private AudioClip jumpSoundDirt;
+    [SerializeField] private AudioClip jumpSoundStone;
 
+    [SerializeField] private AudioClip landSoundWood;
+    [SerializeField] private AudioClip landSoundDirt;
+    [SerializeField] private AudioClip landSoundStone;
+    private bool wasGrounded = true;
 
+    private float airStartY;
+    private float airTime;
+    private float airStartTime;
+
+    [SerializeField] private float minFallDistance = 0.3f;
+    [SerializeField] private float minAirTime = 0.4f;
 
 
     private enum MaterialType
@@ -24,7 +37,6 @@ public class PlayerFootstepsController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
     }
 
     // Update is called once per frame
@@ -60,7 +72,7 @@ public class PlayerFootstepsController : MonoBehaviour
         return MaterialType.None;
     }
 
-    private void PlayFootstepSound()
+    public void PlayFootstepSound()
     {
         List<AudioClip> selectedSounds = null;
         MaterialType materialType = SurfaceSelectFunctionWithRaycast();
@@ -84,5 +96,85 @@ public class PlayerFootstepsController : MonoBehaviour
             footstepSource.PlayOneShot(clip);
         }
     }
+
+    public void PlayJumpSound()
+    {
+        AudioClip selectedSound = null;
+        MaterialType materialType = SurfaceSelectFunctionWithRaycast();
+
+        switch (materialType)
+        {
+            case MaterialType.Dirt:
+                selectedSound = jumpSoundDirt;
+                break;
+            case MaterialType.Stone:
+                selectedSound = jumpSoundStone;
+                break;
+            case MaterialType.Wood:
+                selectedSound = jumpSoundWood;
+                break;
+        }
+
+        if (selectedSound != null)
+        {
+            footstepSource.PlayOneShot(selectedSound);
+        }
+    }
+    public void PlayLandSound()
+    {
+        AudioClip selectedSound = null;
+        MaterialType materialType = SurfaceSelectFunctionWithRaycast();
+
+        switch (materialType)
+        {
+            case MaterialType.Dirt:
+                selectedSound = landSoundDirt;
+                break;
+            case MaterialType.Stone:
+                selectedSound = landSoundStone;
+                break;
+            case MaterialType.Wood:
+                selectedSound = landSoundWood;
+                break;
+        }
+
+        if (selectedSound != null)
+        {
+            footstepSource.PlayOneShot(selectedSound);
+        }
+    }
+
+
+
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (!wasGrounded && IsGroundLayer(collision.gameObject))
+    //    {
+    //        wasGrounded = true;
+
+    //        float fallDistance = airStartY - transform.position.y;
+    //        airTime = Time.time - airStartTime;
+
+    //        if (fallDistance > minFallDistance || airTime > minAirTime)
+    //        {
+    //           PlayLandSound();
+    //        }
+    //    }
+    //}
+
+    //private void OnCollisionExit(Collision collision)
+    //{
+    //    if (IsGroundLayer(collision.gameObject))
+    //    {
+    //        wasGrounded = false;
+    //        airStartY = transform.position.y;
+    //        airStartTime = Time.time;
+    //    }
+    //}
+
+    //private bool IsGroundLayer(GameObject obj)
+    //{
+    //    return obj.CompareTag("Dirt") || obj.CompareTag("Stone") || obj.CompareTag("Wood");
+    //}
 
 }
