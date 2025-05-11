@@ -7,15 +7,22 @@ public class PlayerFootstepsController : MonoBehaviour
     [SerializeField] private List<AudioClip> footstepSoundsDirt;
     [SerializeField] private List<AudioClip> footstepSoundsStone;
     [SerializeField] private List<AudioClip> footstepSoundsWood;
+    [SerializeField] private List<AudioClip> footstepSoundsWater;
     [SerializeField] private AudioSource footstepSource;
 
+    [Header("Jump Settings")]
     [SerializeField] private AudioClip jumpSoundWood;
     [SerializeField] private AudioClip jumpSoundDirt;
     [SerializeField] private AudioClip jumpSoundStone;
+    [SerializeField] private AudioClip jumpSoundWater;
 
     [SerializeField] private AudioClip landSoundWood;
     [SerializeField] private AudioClip landSoundDirt;
     [SerializeField] private AudioClip landSoundStone;
+    [SerializeField] private AudioClip landSoundWater;
+
+    [Header("Fly Settings")]
+    [SerializeField] private AudioClip windSoundEffect;
     private bool wasGrounded = true;
 
     private float airStartY;
@@ -25,12 +32,15 @@ public class PlayerFootstepsController : MonoBehaviour
     [SerializeField] private float minFallDistance = 0.3f;
     [SerializeField] private float minAirTime = 0.4f;
 
+    private bool isWindSoundPlaying = false;
+
 
     private enum MaterialType
     {
         Dirt,
         Stone, 
         Wood, 
+        Water, 
         None
     }
 
@@ -50,7 +60,7 @@ public class PlayerFootstepsController : MonoBehaviour
         Ray ray = new Ray(transform.position, Vector3.down);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out hit, 0.1f))
         {
             MaterialType materialType = MaterialType.None;
 
@@ -64,6 +74,9 @@ public class PlayerFootstepsController : MonoBehaviour
                     break;
                 case "Wood":
                     materialType = MaterialType.Wood;
+                    break; 
+                case "Water":
+                    materialType = MaterialType.Water;
                     break;
             }
 
@@ -87,6 +100,9 @@ public class PlayerFootstepsController : MonoBehaviour
                 break;
             case MaterialType.Wood:
                 selectedSounds = footstepSoundsWood;
+                break;  
+            case MaterialType.Water:
+                selectedSounds = footstepSoundsWater;
                 break;
         }
 
@@ -112,6 +128,9 @@ public class PlayerFootstepsController : MonoBehaviour
                 break;
             case MaterialType.Wood:
                 selectedSound = jumpSoundWood;
+                break;  
+            case MaterialType.Water:
+                selectedSound =jumpSoundWater;
                 break;
         }
 
@@ -136,11 +155,34 @@ public class PlayerFootstepsController : MonoBehaviour
             case MaterialType.Wood:
                 selectedSound = landSoundWood;
                 break;
+            case MaterialType.Water:
+                selectedSound = landSoundWater;
+                break;
         }
 
         if (selectedSound != null)
         {
             footstepSource.PlayOneShot(selectedSound);
+        }
+    }
+
+    public void ToggleWindSound()
+    {
+        if (!isWindSoundPlaying)
+        {
+            footstepSource.clip = windSoundEffect;
+            footstepSource.loop = true;
+            footstepSource.Play();
+            isWindSoundPlaying = true;
+        }
+        
+    }  
+    public void DisableWindSound()
+    {
+        if (isWindSoundPlaying)
+        {
+            footstepSource.Stop();
+            isWindSoundPlaying = false;
         }
     }
 

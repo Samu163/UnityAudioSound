@@ -12,15 +12,18 @@ public class FlyBehaviour : GenericBehaviour
 	private bool fly = false;                     // Boolean to determine whether or not the player activated fly mode.
 	private CapsuleCollider col;                  // Reference to the player capsule collider.
 
-	// Start is always called after any Awake functions.
-	void Start()
+    private PlayerFootstepsController footstepsController;
+
+    // Start is always called after any Awake functions.
+    void Start()
 	{
 		// Set up the references.
 		flyBool = Animator.StringToHash("Fly");
 		col = this.GetComponent<CapsuleCollider>();
 		// Subscribe this behaviour on the manager.
 		behaviourManager.SubscribeBehaviour(this);
-	}
+        footstepsController = GetComponent<PlayerFootstepsController>();
+    }
 
 	// Update is used to set features regardless the active behaviour.
 	void Update()
@@ -30,6 +33,7 @@ public class FlyBehaviour : GenericBehaviour
 			&& !behaviourManager.GetTempLockStatus(behaviourManager.GetDefaultBehaviour))
 		{
 			fly = !fly;
+			footstepsController.DisableWindSound();
 
 			// Force end jump transition.
 			behaviourManager.UnlockTempBehaviour(behaviourManager.GetDefaultBehaviour);
@@ -69,17 +73,30 @@ public class FlyBehaviour : GenericBehaviour
 		col.direction = 1;
 	}
 
-	// LocalFixedUpdate overrides the virtual function of the base class.
-	public override void LocalFixedUpdate()
-	{
-		// Set camera limit angle related to fly mode.
-		behaviourManager.GetCamScript.SetMaxVerticalAngle(flyMaxVerticalAngle);
+    // LocalFixedUpdate overrides the virtual function of the base class.
+    public override void LocalFixedUpdate()
+    {
+        behaviourManager.GetCamScript.SetMaxVerticalAngle(flyMaxVerticalAngle);
 
-		// Call the fly manager.
-		FlyManagement(behaviourManager.GetH, behaviourManager.GetV);
-	}
-	// Deal with the player movement when flying.
-	void FlyManagement(float horizontal, float vertical)
+        float horizontal = behaviourManager.GetH;
+        float vertical = behaviourManager.GetV;
+
+        FlyManagement(horizontal, vertical);
+
+        // Controlar sonido de viento
+        if (fly && vertical > 0.1f)
+        {
+            if (footstepsController != null)
+                footstepsController.ToggleWindSound();
+        }
+        else
+        {
+            if (footstepsController != null)
+                footstepsController.DisableWindSound();
+        }
+    }
+    // Deal with the player movement when flying.
+    void FlyManagement(float horizontal, float vertical)
 	{
 		// Add a force player's rigidbody according to the fly direction.
 		Vector3 direction = Rotating(horizontal, vertical);
